@@ -12,16 +12,16 @@ export async function readData() {
   const [_, fullPath, dataSet] = process.argv as
     | [string, string, string]
     | [string, string];
-  const puzzle = fullPath.split('/').slice(-2).join('/');
+  const puzzle = fullPath.split('\\').slice(-2).join('\\');
   const [day, part] = puzzle
-    .split('/')
+    .split('\\')
     .map((x, i) => (i === 0 ? +x.split('-')[1] : x)) as [number, 'a' | 'b'];
   const fileName = createFileName(day, part, dataSet);
-  const data = (await readFile(fileName)).toString().split('\n');
+  const data = (await readFile(fileName)).toString().replaceAll('\r', '').split('\n');
+  data.splice(data.length -1, 1)
   return data;
 }
 
 function createFileName(day: number, part: 'a' | 'b', dataSet?: string) {
   return join(`day-${day}`, `${part}.data${dataSet ? `.${dataSet}` : ''}.txt`);
 }
-
